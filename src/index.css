@@ -1,0 +1,127 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+/* ============================================================
+   Design tokens
+   ============================================================ */
+:root {
+  --color-brand: 243 75% 59%;         /* Vivid Indigo #6366F1 */
+  --color-brand-dark: 243 75% 49%;    /* Deep Indigo #4F46E5 */
+  --color-brand-light: 243 100% 97%;  /* Soft lavender tint */
+  --color-brand-glow: 243 75% 59% / 0.15;
+  --color-surface: 0 0% 100%;
+  --color-surface-alt: 220 20% 98%;   /* Soft light gray background */
+  --color-surface-alt2: 220 14% 94%;
+  --color-border: 220 13% 90%;
+  --color-border-subtle: 220 13% 94%;
+  --color-text: 222 47% 11%;
+  --color-text-muted: 215 16% 47%;
+  --color-text-subtle: 215 14% 64%;
+  --color-success: 142 71% 45%;
+  --color-error: 0 84% 60%;
+  --color-pro: 270 95% 65%;           /* Vibrant purple accent */
+  --radius: 0.5rem;
+  --radius-lg: 0.875rem;
+  --radius-xl: 1.25rem;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.03);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.03);
+}
+
+/* ============================================================
+   Base reset & typography
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: hsl(var(--color-text));
+  background: hsl(var(--color-surface));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================
+   Utility classes used across components
+   ============================================================ */
+
+/* Card */
+.card {
+  background: hsl(var(--color-surface));
+  border: 1px solid hsl(var(--color-border));
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.card:hover { box-shadow: var(--shadow-md); }
+.card-lift:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+
+/* Skeleton shimmer */
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.skeleton {
+  border-radius: var(--radius);
+  background: linear-gradient(90deg, hsl(var(--color-surface-alt2)) 25%, hsl(var(--color-surface-alt)) 37%, hsl(var(--color-surface-alt2)) 63%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+/* Focus ring */
+.focus-ring:focus-visible {
+  outline: 2px solid hsl(var(--color-brand));
+  outline-offset: 2px;
+}
+
+/* Prose headings */
+h1, h2, h3, h4 { line-height: 1.2; font-weight: 700; letter-spacing: -0.02em; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: hsl(var(--color-border)); border-radius: 3px; }
+
+/* ============================================================
+   Editor-specific layout
+   ============================================================ */
+.editor-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr 260px;
+  height: calc(100vh - 60px);
+  overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+  .editor-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+    height: auto;
+    overflow: visible;
+  }
+}
+
+.editor-panel {
+  border-right: 1px solid hsl(var(--color-border));
+  overflow-y: auto;
+  background: hsl(var(--color-surface-alt));
+}
+
+.editor-panel-right {
+  border-right: none;
+  border-left: 1px solid hsl(var(--color-border));
+}
+
+.editor-canvas-area {
+  background: hsl(210 20% 14%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
