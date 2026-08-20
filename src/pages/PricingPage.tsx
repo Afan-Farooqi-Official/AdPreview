@@ -4,7 +4,7 @@ import { PricingTable } from '../components/pricing/PricingTable';
 
 export function PricingPage() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[hsl(var(--color-bg))]">
       <Header />
       <main className="flex-1 py-16 sm:py-20 px-4 sm:px-6">
         <div className="text-center mb-12 max-w-2xl mx-auto">
@@ -12,18 +12,27 @@ export function PricingPage() {
             Simple pricing.
           </h1>
           <p className="text-lg text-[hsl(var(--color-text-muted))]">
-            Start free. Upgrade to Pro for HD exports, the full scene library, and unlimited projects.
-            Cancel anytime.
+            Start free. Upgrade to Pro for HD exports, the full scene library,
+            and unlimited projects. Cancel anytime.
           </p>
         </div>
+
         <PricingTable />
+
         <p className="text-center text-sm text-[hsl(var(--color-text-subtle))] mt-8">
-          Questions? Email us at{' '}
+          Have questions? Visit our{' '}
           <a
-            href="mailto:support@example.com"
+            href="/support"
+            className="text-[hsl(var(--color-brand))] font-semibold hover:underline"
+          >
+            Help &amp; Support Center
+          </a>{' '}
+          or email{' '}
+          <a
+            href="mailto:support@adpreview.app"
             className="text-[hsl(var(--color-brand))] hover:underline"
           >
-            support@example.com
+            support@adpreview.app
           </a>
         </p>
       </main>

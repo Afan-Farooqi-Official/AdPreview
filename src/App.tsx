@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation, useSearchParams } from 'react-router-dom';
 import { AuthContext, useAuthProvider, useAuth } from './hooks/useAuth';
 import { ToastProvider } from './components/shared/Toast';
 import { LandingPage } from './pages/LandingPage';
@@ -6,6 +6,7 @@ import { SignupPage } from './pages/SignupPage';
 import { EditorPage } from './pages/EditorPage';
 import { ProjectsPage } from './pages/ProjectsPage';
 import { PricingPage } from './pages/PricingPage';
+import { SupportPage } from './pages/SupportPage';
 import { AccountPage } from './pages/AccountPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { Spinner } from './components/shared/Spinner';
@@ -18,14 +19,36 @@ function RequireAuth({ children }: { children: ReactNode }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-[hsl(var(--color-bg))]">
         <Spinner size="lg" />
       </div>
     );
   }
 
   if (!user) {
-    return <Navigate to={`/signup?redirectTo=${encodeURIComponent(location.pathname)}`} replace />;
+    const fullPath = location.pathname + location.search;
+    return <Navigate to={`/signup?redirectTo=${encodeURIComponent(fullPath)}`} replace />;
+  }
+
+  return <>{children}</>;
+}
+
+// Redirects already logged in users away from /signup
+function RedirectIfAuth({ children }: { children: ReactNode }) {
+  const [searchParams] = useSearchParams();
+  const { user, loading } = useAuth();
+  const redirectTo = searchParams.get('redirectTo') ?? '/editor';
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[hsl(var(--color-bg))]">
+        <Spinner size="lg" />
+      </div>
+    );
+  }
+
+  if (user) {
+    return <Navigate to={redirectTo} replace />;
   }
 
   return <>{children}</>;
@@ -43,18 +66,52 @@ export default function App() {
         <ToastProvider>
           <Routes>
             <Route path="/" element={<LandingPage />} />
-            <Route path="/signup" element={<SignupPage />} />
+            <Route
+              path="/signup"
+              element={
+                <RedirectIfAuth>
+                  <SignupPage />
+                </RedirectIfAuth>
+              }
+            />
             <Route path="/pricing" element={<PricingPage />} />
+            <Route path="/support" element={<SupportPage />} />
 
-            {/* Editor is accessible in sample mode without auth, but upload/save require auth */}
-            <Route path="/editor" element={<EditorPage />} />
-            <Route path="/editor/:projectId" element={
-              <RequireAuth><EditorPage /></RequireAuth>
-            } />
+            {/* Sign-Up First: Editor is strictly protected */}
+            <Route
+              path="/editor"
+              element={
+                <RequireAuth>
+                  <EditorPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/editor/:projectId"
+              element={
+                <RequireAuth>
+                  <EditorPage />
+                </RequireAuth>
+              }
+            />
 
             {/* Protected routes */}
-            <Route path="/projects" element={<RequireAuth><ProjectsPage /></RequireAuth>} />
-            <Route path="/account" element={<RequireAuth><AccountPage /></RequireAuth>} />
+            <Route
+              path="/projects"
+              element={
+                <RequireAuth>
+                  <ProjectsPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/account"
+              element={
+                <RequireAuth>
+                  <AccountPage />
+                </RequireAuth>
+              }
+            />
 
             <Route path="*" element={<NotFoundPage />} />
           </Routes>

@@ -17,6 +17,17 @@ export function Header() {
       ? 'text-[hsl(var(--color-text))] font-semibold'
       : 'text-[hsl(var(--color-text-muted))] hover:text-[hsl(var(--color-text))]';
 
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
+    if (location.pathname === '/') {
+      e.preventDefault();
+      const el = document.getElementById(sectionId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+        window.history.pushState(null, '', `#${sectionId}`);
+      }
+    }
+  };
+
   const handleSignOut = async () => {
     await signOut();
     navigate('/');
@@ -39,19 +50,31 @@ export function Header() {
         {/* Marketing Navigation Links */}
         {!user ? (
           <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-[hsl(var(--color-text-muted))]">
-            <a href="#how-it-works" className="hover:text-[hsl(var(--color-text))] transition-colors">
+            <a
+              href="/#how-it-works"
+              onClick={(e) => scrollToSection(e, 'how-it-works')}
+              className="hover:text-[hsl(var(--color-text))] transition-colors"
+            >
               How it works
             </a>
-            <a href="#examples" className="hover:text-[hsl(var(--color-text))] transition-colors">
+            <a
+              href="/#examples"
+              onClick={(e) => scrollToSection(e, 'examples')}
+              className="hover:text-[hsl(var(--color-text))] transition-colors"
+            >
               Examples
             </a>
-            <a href="#surfaces" className="hover:text-[hsl(var(--color-text))] transition-colors">
+            <a
+              href="/#surfaces"
+              onClick={(e) => scrollToSection(e, 'surfaces')}
+              className="hover:text-[hsl(var(--color-text))] transition-colors"
+            >
               Surfaces
             </a>
             <Link to="/pricing" className="hover:text-[hsl(var(--color-text))] transition-colors">
               Pricing
             </Link>
-            <Link to="/editor?sample=true" className="hover:text-[hsl(var(--color-text))] transition-colors">
+            <Link to="/signup?redirectTo=/editor" className="hover:text-[hsl(var(--color-text))] transition-colors">
               Editor
             </Link>
           </nav>

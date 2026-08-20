@@ -73,9 +73,15 @@ export function EditorPage() {
 
   const canvasRef = useRef<EditorCanvasHandle>(null);
 
-  const [adImageUrl, setAdImageUrl] = useState<string | null>(
-    paramAdUrl || (isSampleMode ? SAMPLE_AD_URL : null)
-  );
+  const [adImageUrl, setAdImageUrl] = useState<string | null>(() => {
+    if (paramAdUrl) return paramAdUrl;
+    const pending = sessionStorage.getItem('pending_ad_image');
+    if (pending) {
+      sessionStorage.removeItem('pending_ad_image');
+      return pending;
+    }
+    return isSampleMode ? SAMPLE_AD_URL : null;
+  });
   const [selectedScene, setSelectedScene] = useState<Scene | null>(null);
   const [transform, setTransform] = useState<Transform>(DEFAULT_TRANSFORM);
   const [selectedTextId, setSelectedTextId] = useState<string | null>(null);

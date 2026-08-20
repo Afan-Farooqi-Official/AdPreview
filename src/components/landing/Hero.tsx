@@ -131,8 +131,15 @@ export function Hero() {
   const handleFileUpload = useCallback(
     async (file: File) => {
       if (!user) {
-        // Redirect to signup
-        navigate('/signup?redirectTo=/editor');
+        // Save file to sessionStorage so after signup it automatically opens in editor
+        const reader = new FileReader();
+        reader.onload = () => {
+          if (typeof reader.result === 'string') {
+            sessionStorage.setItem('pending_ad_image', reader.result);
+          }
+          navigate('/signup?redirectTo=/editor');
+        };
+        reader.readAsDataURL(file);
         return;
       }
       try {
@@ -147,7 +154,19 @@ export function Hero() {
   );
 
   const handleSampleClick = (sampleUrl: string) => {
+    if (!user) {
+      navigate(`/signup?redirectTo=${encodeURIComponent(`/editor?sample=true&adUrl=${sampleUrl}`)}`);
+      return;
+    }
     navigate(`/editor?sample=true&adUrl=${encodeURIComponent(sampleUrl)}`);
+  };
+
+  const handleSurfaceClick = () => {
+    if (!user) {
+      navigate('/signup?redirectTo=/editor?sample=true');
+      return;
+    }
+    navigate('/editor?sample=true');
   };
 
   return (
@@ -221,13 +240,13 @@ export function Hero() {
         </div>
 
         {/* No credit card / Try with a sample arrow */}
-        <div className="flex flex-col items-center mb-8">
+        <div id="examples" className="flex flex-col items-center mb-8 scroll-mt-24">
           <span className="text-xs text-[hsl(var(--color-text-subtle))] font-medium mb-1.5">
             No credit card required
           </span>
           <div className="flex items-center gap-1.5 text-xs text-[hsl(var(--color-text-muted))] font-medium">
             <span>or</span>
-            <span className="text-[hsl(var(--color-text))] font-bold">try with a sample</span>
+            <span className="text-[hsl(var(--color-text))] font-bold">try with a sample example</span>
             <span className="text-base text-[hsl(var(--color-brand))]">↴</span>
           </div>
         </div>
@@ -277,7 +296,7 @@ export function Hero() {
               return (
                 <div
                   key={surf.id}
-                  onClick={() => navigate('/editor?sample=true')}
+                  onClick={handleSurfaceClick}
                   className="card group cursor-pointer overflow-hidden border border-[hsl(var(--color-border))] rounded-2xl bg-white hover:border-[hsl(var(--color-brand))]/60 transition-all duration-200"
                 >
                   <div className="aspect-[4/3] bg-slate-100 relative overflow-hidden">

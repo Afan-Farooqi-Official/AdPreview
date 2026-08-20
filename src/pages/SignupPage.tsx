@@ -26,6 +26,12 @@ export function SignupPage() {
     setStep('otp');
   };
 
+  const handleInstantLogin = async (emailAddress: string) => {
+    await authService.signInDemo(emailAddress);
+    await refreshUser();
+    navigate(redirectTo, { replace: true });
+  };
+
   const handleVerify = async (code: string) => {
     const { error } = await authService.verifyOtp(email, code);
     if (!error) {
@@ -40,9 +46,9 @@ export function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[hsl(var(--color-bg))]">
       {/* Minimal header */}
-      <header className="border-b border-[hsl(var(--color-border))] h-[60px] flex items-center px-6">
+      <header className="border-b border-[hsl(var(--color-border))] h-[60px] flex items-center px-6 bg-white">
         <Link to="/" className="flex items-center gap-2.5 font-bold text-xl text-[hsl(var(--color-text))] tracking-tight">
           <div className="w-8 h-8 bg-gradient-to-tr from-[hsl(var(--color-brand-dark))] to-[hsl(var(--color-brand))] rounded-xl flex items-center justify-center shadow-md shadow-[hsl(var(--color-brand))]/20">
             <span className="text-white font-black text-base">A</span>
@@ -53,9 +59,13 @@ export function SignupPage() {
 
       <main className="flex-1 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-sm">
-          <div className="card p-8">
+          <div className="card p-8 bg-white border border-slate-200 shadow-sm rounded-2xl">
             {step === 'email' ? (
-              <EmailStep onCodeSent={handleCodeSent} onSendOtp={handleSendOtp} />
+              <EmailStep
+                onCodeSent={handleCodeSent}
+                onSendOtp={handleSendOtp}
+                onInstantLogin={handleInstantLogin}
+              />
             ) : (
               <OtpStep
                 email={email}

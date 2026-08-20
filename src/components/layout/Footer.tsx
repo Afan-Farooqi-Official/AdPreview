@@ -11,10 +11,10 @@ export function Footer() {
           </div>
           <span>AdPreview</span>
         </div>
-        <nav className="flex flex-wrap items-center gap-4 text-sm text-[hsl(var(--color-text-muted))]">
+        <nav className="flex flex-wrap items-center gap-5 text-sm text-[hsl(var(--color-text-muted))]">
           <Link to="/pricing" className="hover:text-[hsl(var(--color-text))] transition-colors">Pricing</Link>
           <Link to="/editor" className="hover:text-[hsl(var(--color-text))] transition-colors">Editor</Link>
-          <a href="mailto:support@example.com" className="hover:text-[hsl(var(--color-text))] transition-colors">Support</a>
+          <Link to="/support" className="hover:text-[hsl(var(--color-text))] transition-colors">Support &amp; FAQ</Link>
         </nav>
         <p className="text-xs text-[hsl(var(--color-text-subtle))]">
           © {year} AdPreview. All rights reserved.

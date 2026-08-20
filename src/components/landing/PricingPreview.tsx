@@ -1,56 +1,24 @@
 import { Link } from 'react-router-dom';
-import { Check, X } from 'lucide-react';
+import { Check, Sparkles } from 'lucide-react';
 import { Button } from '../shared/Button';
 import { PRO_PRICE_MONTHLY } from '../../types';
 
-const features: { label: string; free: boolean | string; pro: boolean | string }[] = [
-  { label: 'Billboard scenes',      free: 'Limited (5)',       pro: 'Full library (10+)' },
-  { label: 'Drag / resize / rotate', free: true,              pro: true },
-  { label: 'Export quality',        free: 'Standard (1280px)', pro: 'HD (full resolution)' },
-  { label: 'Watermark-free export', free: false,              pro: true },
-  { label: 'Saved projects',        free: 'Up to 3',          pro: 'Unlimited' },
-  { label: 'Try with sample ad',    free: true,               pro: true },
+const freeFeatures = [
+  'Limited billboard scenes (5 scenes)',
+  'Drag, resize & rotate freely',
+  'Standard export quality (1280px)',
+  'Exports with watermark',
+  'Limited saved projects (up to 3)',
 ];
 
-function FeatureRow({
-  label,
-  value,
-}: {
-  label: string;
-  value: boolean | string;
-}) {
-  const isAvailable = value !== false;
-  const qualifier = typeof value === 'string' ? value : null;
-
-  return (
-    <li className="flex items-start gap-3 py-2.5 border-b border-slate-100 last:border-0">
-      {/* Icon column — always fixed width */}
-      <span className="mt-0.5 w-5 h-5 flex-shrink-0 flex items-center justify-center">
-        {isAvailable ? (
-          <Check size={16} className="text-emerald-500" />
-        ) : (
-          <X size={14} className="text-slate-300" />
-        )}
-      </span>
-
-      {/* Text column */}
-      <span className="flex flex-col min-w-0">
-        <span
-          className={`text-sm font-medium leading-snug ${
-            isAvailable ? 'text-slate-800' : 'text-slate-400 line-through decoration-slate-300'
-          }`}
-        >
-          {label}
-        </span>
-        {qualifier && (
-          <span className="text-[11px] text-slate-400 font-normal mt-0.5 leading-tight">
-            {qualifier}
-          </span>
-        )}
-      </span>
-    </li>
-  );
-}
+const proFeatures: { text: string; highlight?: boolean }[] = [
+  { text: 'Everything in Free, and:', highlight: true },
+  { text: 'Full scene library (10+ billboards)' },
+  { text: 'HD export (full original resolution)' },
+  { text: 'Watermark-free downloads' },
+  { text: 'Unlimited saved projects' },
+  { text: 'Priority support' },
+];
 
 export function PricingPreview() {
   return (
@@ -69,20 +37,26 @@ export function PricingPreview() {
           {/* Free plan */}
           <div className="card p-6 flex flex-col">
             <div className="mb-5">
-              <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">
-                Free
-              </span>
-              <div className="text-4xl font-black text-[hsl(var(--color-text))] mt-1 tracking-tight">
-                $0
-              </div>
+              <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Free</span>
+              <div className="text-4xl font-black text-[hsl(var(--color-text))] mt-1 tracking-tight">$0</div>
               <p className="text-sm text-slate-400 mt-1">Forever free, no credit card</p>
             </div>
             <Button variant="outline" size="md" asChild className="mb-5">
               <Link to="/signup">Get started free</Link>
             </Button>
-            <ul className="divide-y-0">
-              {features.map((f) => (
-                <FeatureRow key={f.label} label={f.label} value={f.free} />
+            <ul>
+              {freeFeatures.map((text, i) => (
+                <li
+                  key={text}
+                  className={`flex items-center gap-3 py-3 text-sm text-slate-700 ${
+                    i !== freeFeatures.length - 1 ? 'border-b border-slate-100' : ''
+                  }`}
+                >
+                  <span className="w-5 flex-shrink-0 flex justify-center">
+                    <Check size={16} className="text-emerald-500" />
+                  </span>
+                  <span>{text}</span>
+                </li>
               ))}
             </ul>
           </div>
@@ -93,13 +67,9 @@ export function PricingPreview() {
               Popular
             </div>
             <div className="mb-5">
-              <span className="text-[11px] font-bold uppercase tracking-widest text-[hsl(var(--color-brand))]">
-                Pro
-              </span>
+              <span className="text-[11px] font-bold uppercase tracking-widest text-[hsl(var(--color-brand))]">Pro</span>
               <div className="flex items-end gap-1 mt-1">
-                <span className="text-4xl font-black text-[hsl(var(--color-text))] tracking-tight">
-                  {PRO_PRICE_MONTHLY}
-                </span>
+                <span className="text-4xl font-black text-[hsl(var(--color-text))] tracking-tight">{PRO_PRICE_MONTHLY}</span>
                 <span className="text-base font-medium text-slate-400 mb-1">/mo</span>
               </div>
               <p className="text-sm text-slate-400 mt-1">Cancel anytime</p>
@@ -107,9 +77,31 @@ export function PricingPreview() {
             <Button size="md" asChild className="mb-5">
               <Link to="/pricing">Upgrade to Pro</Link>
             </Button>
-            <ul className="divide-y-0">
-              {features.map((f) => (
-                <FeatureRow key={f.label} label={f.label} value={f.pro} />
+            <ul>
+              {proFeatures.map((f, i) => (
+                <li
+                  key={f.text}
+                  className={`flex items-center gap-3 py-3 text-sm ${
+                    i !== proFeatures.length - 1 ? 'border-b border-slate-100' : ''
+                  }`}
+                >
+                  <span className="w-5 flex-shrink-0 flex justify-center">
+                    {f.highlight ? (
+                      <Sparkles size={15} className="text-[hsl(var(--color-brand))]" />
+                    ) : (
+                      <Check size={16} className="text-emerald-500" />
+                    )}
+                  </span>
+                  <span
+                    className={
+                      f.highlight
+                        ? 'font-semibold text-[hsl(var(--color-brand))]'
+                        : 'text-slate-700'
+                    }
+                  >
+                    {f.text}
+                  </span>
+                </li>
               ))}
             </ul>
           </div>
